@@ -17,6 +17,11 @@ app = FastAPI()
 def read_root():
     return {"mensaje": "Bienvenido a mi primera API con FastAPI"}
 
+#Definimos un endpoint de tipo GET que recibe un ID de item y devuelve los detalles del item correspondiente
+@app.get("/items/{item_id}")
+def read_item(item_id: int):
+    return {"item_id": item_id, "Nombre": item_id.nombre, "Precio": item_id.precio, "Descripcion": item_id.descripcion}
+
 #Definimos un endpoint de tipo POST que recibe un item y lo devuelve con un mensaje de confirmacion aqui nos aseguramos que los Items 
 # Cumplan con la estructura definida en el Modelo Item de Pydantic
 @app.post("/items/")
