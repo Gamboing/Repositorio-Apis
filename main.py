@@ -26,3 +26,8 @@ def crear_item(item: Item):
 @app.put("/items/{item_id}")
 def actualizar_item(item_id: int, item: Item):
     return {"mensaje": f"Item {item_id} actualizado", "nuevo": item}
+
+# Definimos un endpoint de tipo DELETE que elimina un item basado en su ID y devuelve un mensaje de confirmacion
+@app.delete("/items/{item_id}")
+def eliminar_item(item_id: int):
+    return {"mensaje": f"Item {item_id} eliminado correctamente"}
