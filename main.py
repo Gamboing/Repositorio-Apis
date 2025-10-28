@@ -2,12 +2,13 @@
 #Librerias utilizadas FastAPI y Pydantic
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import Optional
 
 # Definicion del modelo de datos usando Pytdantic la estructura que utilizaran los datos de la Api que se vayan a ingresar
 class Item(BaseModel):
     nombre: str
     precio: float
-    descripcion: str | None = None
+    descripcion: Optional[str] = None
 #Creamos la instancia de FastAPI tecnicamente es el nombre de la aplicacion
 app = FastAPI()
 
@@ -31,3 +32,5 @@ def actualizar_item(item_id: int, item: Item):
 @app.delete("/items/{item_id}")
 def eliminar_item(item_id: int):
     return {"mensaje": f"Item {item_id} eliminado correctamente"}
+
+
