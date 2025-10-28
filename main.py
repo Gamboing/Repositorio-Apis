@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
 
+items_db = {}  # Diccionario para guardar los items
+
 # Definicion del modelo de datos usando Pytdantic la estructura que utilizaran los datos de la Api que se vayan a ingresar
 class Item(BaseModel):
     nombre: str
@@ -20,22 +22,31 @@ def read_root():
 #Definimos un endpoint de tipo GET que recibe un ID de item y devuelve los detalles del item correspondiente
 @app.get("/items/{item_id}")
 def read_item(item_id: int):
-    return {"item_id": item_id, "Nombre": item_id.nombre, "Precio": item_id.precio, "Descripcion": item_id.descripcion}
+    item = items_db.get(item_id)
+    if item:
+        return {"item_id": item_id, "item": item}
+    return {"error": "Item no encontrado"}
 
 #Definimos un endpoint de tipo POST que recibe un item y lo devuelve con un mensaje de confirmacion aqui nos aseguramos que los Items 
 # Cumplan con la estructura definida en el Modelo Item de Pydantic
-@app.post("/items/")
-def crear_item(item: Item):
+@app.post("/items/{item_id}")
+def crear_item(item_id: int, item: Item):
+    items_db[item_id] = item
     return {"mensaje": "Item creado correctamente", "item": item}
 
 # Definimos un endpoint de tipo PUT Que actualiza un item existente basado en su ID y devuelve el item actualizado
 @app.put("/items/{item_id}")
 def actualizar_item(item_id: int, item: Item):
-    return {"mensaje": f"Item {item_id} actualizado", "nuevo": item}
+    if item_id in items_db:
+        items_db[item_id] = item
+        return {"mensaje": f"Item {item_id} actualizado", "nuevo": item}
+    return {"error": "Item no encontrado"}
 
 # Definimos un endpoint de tipo DELETE que elimina un item basado en su ID y devuelve un mensaje de confirmacion
 @app.delete("/items/{item_id}")
 def eliminar_item(item_id: int):
-    return {"mensaje": f"Item {item_id} eliminado correctamente"}
-
+    if item_id in items_db:
+        del items_db[item_id]
+        return {"mensaje": f"Item {item_id} eliminado correctamente"}
+    return {"error": "Item no encontrado"}
 
