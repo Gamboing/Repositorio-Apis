@@ -21,3 +21,8 @@ def read_root():
 @app.post("/items/")
 def crear_item(item: Item):
     return {"mensaje": "Item creado correctamente", "item": item}
+
+# Definimos un endpoint de tipo PUT Que actualiza un item existente basado en su ID y devuelve el item actualizado
+@app.put("/items/{item_id}")
+def actualizar_item(item_id: int, item: Item):
+    return {"mensaje": f"Item {item_id} actualizado", "nuevo": item}
